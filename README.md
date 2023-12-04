@@ -1,10 +1,7 @@
 # Deploying threshold signatures into X-Road
 
-[X-Road](https://x-road.global/) is a data exchange system used in many countries, for example Estonia and Finland. The [project code](https://github.com/nordic-institute/X-Road/)  is open-sourced. This tutorial acompanies the submitted publication: The Power of Many: Securing Organisational Identity Through Distributed Key Management and walks you through the test setup used in the paper. The goal of this tutorial is to explain how to setup and configure X-Road in order to employ threshold multiparty signatures.
+[X-Road](https://x-road.global/) is a data exchange system used in many countries, for example Estonia and Finland. The [project code](https://github.com/nordic-institute/X-Road/)  is open-sourced. This tutorial acompanies the submitted publication: The Power of Many: Securing Organisational Identity Through Distributed Key Management and walks you through a test setup similar to the one used in the paper. The goal of this tutorial is to explain how to setup and configure X-Road in order to employ threshold multiparty signatures.
 
-<!-- ## Background --> 
-
-<!-- The Members of the X-Road network exchange messages. Imagine a two-member scenario, where one --> 
 
 ## Tutorial
 
@@ -28,23 +25,23 @@ The expected outcome at this point is four "containers" (the configuration in th
 - `democa` at `10.174.114.10` with the test Certification Authority, OCSP and TSA.
 - `democs` at `10.174.114.20` with the Central Server and the following Security Servers connected.
 - `demoss1` at `10.174.114.30` with the Security Server (SS<sub>C</sub>) for a Client Member.
-- `demoss2` at `10.174.114.40` with Security Server (SS<sub>P</sub>)for a Provider Member.
+- `demoss2` at `10.174.114.40` with Security Server (SS<sub>P</sub>) for a Provider Member.
 
-Client and Provider are regular X-Road Members with the respective subsystems. Each container and the `host` need to be able to reach other on a network (the IP addresses can of course differ). From the containers the `host` is available at `10.174.114.1`.
+Client and Provider are regular X-Road Members with the respective subsystems. Each container and the `host` need to be able to reach other on a network (the IP addresses can, of course, differ). From the containers the `host` is available at `10.174.114.1`.
 
 #### Provider Information System
 
-For the Provider Information System test we can use a basic REST application. The [full example](https://flask-restful.readthedocs.io/en/latest/quickstart.html#full-example) Flask application from [Flask RESTful](https://flask-restful.readthedocs.io/en/latest/) package can be used. This application is expected to be run inside the `host` on such a port (e.g., `8080`) so that `demoss2` is able to connect to it (i.e., set up the firewall accordingly). Once successfully setup, the following request from the `host` can be used for testing access to the Provider directly:
-```bash
-$ curl http://localhost:8008/todos
+For the Provider Information System we can use a basic REST application. The [full example](https://flask-restful.readthedocs.io/en/latest/quickstart.html#full-example) Flask application from [Flask RESTful](https://flask-restful.readthedocs.io/en/latest/) package is a straightforward example. This application is expected to be run inside the `host` on such a port (e.g., `8080`) so that `demoss2` is able to connect to it (i.e., the firewall is setup accordingly). When Flask app is working, the following request from the `host` can be used for testing access to the Provider's IS directly:
+```shell
+$ curl http://localhost:8080/todos
 {"todo1": {"task": "build an API"}, "todo2": {"task": "?????"}, "todo3": {"task": "profit!"}}
 ```
 
 #### Client Information System
 
 
-The Client's Information System can simply be simulated by an HTTP request through e.g. cURL - similarly, to how we tested the Provider's Information System with curl. The following is a template that should work at this time:
-```bash
+The Client's Information System can simply be simulated by an HTTP request through e.g. cURL - similarly, to how we tested the Provider's Information System with cURL. The following is a template that should work at this time if the values are substituted correctly:
+```shell
 $ curl -H 'X-Road-Client: {X-Road instance identifier}/{Client Member class}/{Client Member code}/{Client Member Subsystem code}' \
     -X GET -i "https://{Clients' Security Server IP or domain}/r1/{X-Road instance identifier}/{Provider Member class}/{Provider Member code}/{Provider Member Subsystem code}/{Provider Member Subsystem Service name}/{REST API endpoint}" -k
 ```
@@ -52,10 +49,10 @@ $ curl -H 'X-Road-Client: {X-Road instance identifier}/{Client Member class}/{Cl
 
 ### 2. Treshold signature platform
 
-For the threshold signatures we use [the MeeSign platform](https://meesign.crocs.fi.muni.cz). In order to use it one needs to have the MeeSign server and the clients running. Follow the instructions to install the [MeeSign server](https://github.com/crocs-muni/meesign-server). To setup the clients follow [this README.md](https://github.com/quapka/meesign-client/tree/add-ptsrsap1) and then start the desirable number of signers (five in order to follow this example closely), use the [_always sign_](https://github.com/quapka/meesign-client/tree/add-ptsrsap1/meesign_core#always-sign-example-client) application (i.e., the [`always_sign.dart`](https://github.com/quapka/meesign-client/blob/add-ptsrsap1/meesign_core/example/always_sign.dart)).  At this point you should have five Dart signing applications running as individual processes.
+For the threshold signatures we use [the MeeSign platform](https://meesign.crocs.fi.muni.cz). In order to use it one needs to have the MeeSign server and the clients running. Follow the instructions to build the [MeeSign server](https://github.com/crocs-muni/meesign-server). To setup the clients follow [this README.md](https://github.com/quapka/meesign-client/tree/add-ptsrsap1) and then start the desirable number of signers (five in order to follow this example closely), use the [_always sign_](https://github.com/quapka/meesign-client/tree/add-ptsrsap1/meesign_core#always-sign-example-client) application (i.e., the [`always_sign.dart`](https://github.com/quapka/meesign-client/blob/add-ptsrsap1/meesign_core/example/always_sign.dart)).  At this point you should have five Dart signing applications running as individual processes.
 
 Next, the MeeSign signing group needs to be registered to the server through the Meesign server CLI. The same application that starts the server can be used to also manage it. Change directory to the `meesign-server` project and do the following:
-```bash
+```shell
 $ cargo run --release -- get-devices
 [389d61f973aad5c11d4ea25d1d9c0aac19a9e3e354bd7d2dc52cec3205c00e80] A (seen before 1s)
 [7cf029210bb63070ea2a2a9f790d9defc9ff597995dadb8485a1b2347b2fc0d8] B (seen before 1s)
@@ -65,19 +62,19 @@ $ cargo run --release -- get-devices
 ```
 
 Each line of the output corresponds to a single connected device (i.e., five devices in our case). The random string in the square brackets is the ID of the device. The name of the individual devices are `A, B, C, D` and `E`. To create a 3-out-of-5 signing group run the following:
-```bash
+```shell
 cargo run --release -- request-group 3outof5alwayssign 3 sign_challenge 389d61f973aad5c11d4ea25d1d9c0aac19a9e3e354bd7d2dc52cec3205c00e80 7cf029210bb63070ea2a2a9f790d9defc9ff597995dadb8485a1b2347b2fc0d8 de725ce1f62d90dd080d0e8c6cd31626f00e65975cfff14808a3dd79e2799a2b cd5ee7e9817f5c4d834e86e625c020b45ab3b75192cdc1fba45f54b68db38ec9 52b81dbc19f7bd33255ab8bf47e252883974d1a04d8fbfeaf247cd8848b97733
 ```
 
 The previous command will create a group called `3outof5alwayssign` that is able to sign any challenge. Implicitly, the group size is five (due to the number of devices' IDs used). And the threshold for signing is `3`. Unfortunately, the server does not support persistance for now. Therefore, closing the server at this point would require fully redoing the previous setup of the group (up to the restart of the individual signing applications).
 
-```bash
+```shell
 $ cargo run --release -- get-devices
 [3082010a02820101008c006cbc05c14437df26328447d3ac992c1923d936f4be30bfa5520395ce78555404cac30ddb63bf7aeb0006e345827a72e61d6a0075f413ae77ca07b75400e8d20c7140cf2efbe53fa981a39d46f3c230f68c71a9b05024f06d9b7b1fbb1730870bdc4dfc1ebf4856161e3335d5070adc09d483a32c61918b4068a14f11fedaa3640ff33d7e91cca307c690508fd35a8929db723a84f4d112675c5935dc1ae546d19b56bc4ec9e6c81146a5a766af539dc4745bf1a554d93bb60c43434a63189875fb5647f0ffcd758ee8e227febc7c9a3038267a96aa1ba48a89934f058de1f1b9c730e3a48c33c91cfc1f19f8fbadbbf7124ddf338ff6fcadd5d9458c8e110203010001] GroupName (2-of-2, 3)
 ```
 
 Each line corresponds to a signing group. Due to the proof of concept solution for now, we need the server to have only a single group. The value in the square brackets corresponds to the public RSA key of the group. You can check the value of it by the following commands:
-```bash
+```shell
 $ echo '3082010a02820101008c006cbc05c14437df26328447d3ac992c1923d936f4be30bfa5520395ce78555404cac30ddb63bf7aeb0006e345827a72e61d6a0075f413ae77ca07b75400e8d20c7140cf2efbe53fa981a39d46f3c230f68c71a9b05024f06d9b7b1fbb1730870bdc4dfc1ebf4856161e3335d5070adc09d483a32c61918b4068a14f11fedaa3640ff33d7e91cca307c690508fd35a8929db723a84f4d112675c5935dc1ae546d19b56bc4ec9e6c81146a5a766af539dc4745bf1a554d93bb60c43434a63189875fb5647f0ffcd758ee8e227febc7c9a3038267a96aa1ba48a89934f058de1f1b9c730e3a48c33c91cfc1f19f8fbadbbf7124ddf338ff6fcadd5d9458c8e110203010001' | xxd -r -p | openssl rsa -pubin -noout -text
 Public-Key: (2048 bit)
 Modulus:
@@ -107,48 +104,51 @@ The public key of the group serves as an identifier of the signing group and it 
 
 ### 3. Configure SS<sub>C</sub> to use threshold signatures
 
-In short, the goal of this setup is to connect the signing group to SS<sub>C</sub> to serve as the signing device for Client Member.
+In short, the goal of this step is to connect the signing group to SS<sub>C</sub> to serve as the signing device for Client Member.
 
 First, build the [Cryptoki interface library](https://github.com/quapka/cryptoki-bridge/tree/add-rsa) for exposing MeeSign groups as PKCS#11. Then take the resulting shared library `target/release/libcryptoki_bridge.so` and copy it to the Client's Security Server. If you are using LXD you can do so with a similar command:
-```bash
+```shell
 $ lxc file push target/release/libcryptoki_bridge.so demoss1/home/xroad/
 ```
 
 The following commands are done inside the Client's Security Server container. If you are using LXD you can connect to it using the following command:
-```bash
+```shell
 $ lxc exec demoss1 /bin/bash
 root@demoss1:~#
 ```
 
-Check that the previously added `libcryptoki_bridge.so` file is accessible to the `xroad` user. Install the support for [Hardware Tokens](https://github.com/nordic-institute/X-Road/blob/develop/doc/Manuals/ig-ss_x-road_v6_security_server_installation_guide.md#210-installing-the-support-for-hardware-tokens). Next, open the configuration for the `xroad-signer` service in `/etc/xroad/devices.ini` and add the an entry for MeeSign - the tested configuration is available in `example-devices.ini`. Add the contents of `example-devices.ini` to `/etc/xroad/devices.ini`. To let `libcryptoki_bridge.so` know about the MeeSign server and signing group set up the following enviromental variables so that the `xroad-signer` service has them available (the configuration is described in more detail in [here](https://github.com/KristianMika/mpc-bridge/wiki/Cryptoki-Bridge#configuration)):
-```bash
+Check that the previously added `libcryptoki_bridge.so` file is owned by the `xroad` user. Install the support for [Hardware Tokens](https://github.com/nordic-institute/X-Road/blob/develop/doc/Manuals/ig-ss_x-road_v6_security_server_installation_guide.md#210-installing-the-support-for-hardware-tokens). Next, open the configuration for the `xroad-signer` service in `/etc/xroad/devices.ini` and add an entry for MeeSign - the tested configuration is available in this repository in `example-devices.ini`. Add the contents of `example-devices.ini` to `/etc/xroad/devices.ini`. To let `libcryptoki_bridge.so` know about the MeeSign server and signing group set up the following enviromental variables so that the `xroad-signer` service has them available (the configuration is described in more detail in [here](https://github.com/KristianMika/mpc-bridge/wiki/Cryptoki-Bridge#configuration)):
+```shell
 COMMUNICATOR_HOSTNAME - sets the meesign hostname, e.g. 10.174.114.1 (the host in this tutorial)
 COMMUNICATOR_CERTIFICATE_PATH - provides the library with the path to the CA certificate (required)
 GROUP_ID - the public key encoded as hex from the output for `get-groups`.
 ```
 
 When setting up the MeeSign server the, one of the steps was to generate keys and certificates for the server. They will be generated in `{meesign-server-path}/keys`. Copy the `meesign-ca-cert.pem` from the MeeSign server into the SS<sub>C</sub> container, e.g. with:
-```bash
+```shell
 $ lxc file push {meesign-server-path}/keys/meesign-car-cert.pem demoss1/home/xroad/
 ```
-Make sure the file is accessible by `xroad` user.
+Make sure the file is owned by the `xroad` user. E.g. using:
+```shell
+root@demoss1:~# chown xroad:xroad -R /home/xroad
+```
 
 One place where you can set these variables is `demoss2/etc/xroad/services/signer.conf`. So, following this example add to the file the following lines:
-```bash
+```shell
 COMMUNICATOR_HOSTNAME=10.174.114.1
-COMMUNICATOR_CERTIFICATE_PATH - provides the library with the path to the CA certificate (required)
+COMMUNICATOR_CERTIFICATE_PATH=/home/xroad/meesign-ca-cert.pem
 GROUP_ID=3082010a02820101008c006cbc05c14437df26328447d3ac992c1923d936f4be30bfa5520395ce78555404cac30ddb63bf7aeb0006e345827a72e61d6a0075f413ae77ca07b75400e8d20c7140cf2efbe53fa981a39d46f3c230f68c71a9b05024f06d9b7b1fbb1730870bdc4dfc1ebf4856161e3335d5070adc09d483a32c61918b4068a14f11fedaa3640ff33d7e91cca307c690508fd35a8929db723a84f4d112675c5935dc1ae546d19b56bc4ec9e6c81146a5a766af539dc4745bf1a554d93bb60c43434a63189875fb5647f0ffcd758ee8e227febc7c9a3038267a96aa1ba48a89934f058de1f1b9c730e3a48c33c91cfc1f19f8fbadbbf7124ddf338ff6fcadd5d9458c8e110203010001
 ```
 
 Before you can use the group for signing you need to restart the `xroad-signer` service with:
-```bash
+```shell
 root@demoss1:~# systemctl restart xroad-signer.service
 ```
 
 Finally, go to the web interface for Client's Security Server and add the new key in the `Keys and certificates` for the Client, generate CSR and use it as normally.
 
 At this point it should be possible to use the threshold signing key to sign a Client's request:
-```bash
+```shell
 $ curl -H 'X-Road-Client: {X-Road instance identifier}/{Client Member class}/{Client Member code}/{Client Member Subsystem code}' \
     -X GET -i "https://{Clients' Security Server IP or domain}/r1/{X-Road instance identifier}/{Provider Member class}/{Provider Member code}/{Provider Member Subsystem code}/{Provider Member Subsystem Service name}/{REST API endpoint}" -k
 ```
