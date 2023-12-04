@@ -46,6 +46,12 @@ $ curl -H 'X-Road-Client: {X-Road instance identifier}/{Client Member class}/{Cl
     -X GET -i "https://{Clients' Security Server IP or domain}/r1/{X-Road instance identifier}/{Provider Member class}/{Provider Member code}/{Provider Member Subsystem code}/{Provider Member Subsystem Service name}/{REST API endpoint}" -k
 ```
 
+You can also test that the TODOS service is reachable from `demoss1` with:
+```shell
+root@demoss1~# curl 10.174.114.1:8080/todos
+{"todo1": {"task": "build an API"}, "todo2": {"task": "?????"}, "todo3": {"task": "profit!"}}
+```
+
 
 ### 2. Treshold signature platform
 
