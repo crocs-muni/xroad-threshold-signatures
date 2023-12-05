@@ -7,7 +7,7 @@
 
 On a high-level the tutorial will help you set up:
 
-1. Testing instance of the X-Road network with several members and their respective information systems.
+1. Test instance of the X-Road network with several members and their respective information systems.
 1. Threshold signature platform that comprises.
 1. Configure the platform to a particular X-Road member through PKCS#11 interface.
 
