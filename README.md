@@ -75,7 +75,7 @@ cargo run --release -- request-group 3outof5alwayssign 3 sign_challenge 389d61f9
 The previous command will create a group called `3outof5alwayssign` that is able to sign any challenge. Implicitly, the group size is five (due to the number of devices' IDs used). And the threshold for signing is `3`. Unfortunately, the server does not support persistance for now. Therefore, closing the server at this point would require fully redoing the previous setup of the group (up to the restart of the individual signing applications).
 
 ```shell
-$ cargo run --release -- get-devices
+$ cargo run --release -- get-groups
 [3082010a02820101008c006cbc05c14437df26328447d3ac992c1923d936f4be30bfa5520395ce78555404cac30ddb63bf7aeb0006e345827a72e61d6a0075f413ae77ca07b75400e8d20c7140cf2efbe53fa981a39d46f3c230f68c71a9b05024f06d9b7b1fbb1730870bdc4dfc1ebf4856161e3335d5070adc09d483a32c61918b4068a14f11fedaa3640ff33d7e91cca307c690508fd35a8929db723a84f4d112675c5935dc1ae546d19b56bc4ec9e6c81146a5a766af539dc4745bf1a554d93bb60c43434a63189875fb5647f0ffcd758ee8e227febc7c9a3038267a96aa1ba48a89934f058de1f1b9c730e3a48c33c91cfc1f19f8fbadbbf7124ddf338ff6fcadd5d9458c8e110203010001] GroupName (2-of-2, 3)
 ```
 
