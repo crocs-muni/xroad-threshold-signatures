@@ -2,6 +2,10 @@
 
 [X-Road](https://x-road.global/) is a data exchange system used in many countries, for example Estonia and Finland. The [project code](https://github.com/nordic-institute/X-Road/)  is open-sourced. This tutorial acompanies the submitted publication: The Power of Many: Securing Organisational Identity Through Distributed Key Management and walks you through a test setup similar to the one used in the paper. The goal of this tutorial is to explain how to setup and configure X-Road in order to employ threshold multiparty signatures.
 
+[Example deployment of threshold signatures to X-Road](./diagram.png)
+
+The diagram shows an example deployment scenario, where the three signers: a Client Security Server signer and a doctor and a hospital representative form a threshold group, e.g., as 3-out-of-3 group, that together needs to colloboratively sign. Outgoing requests or responses from the Hospital Client Member thus need to be confirmed by all these parties.
+
 
 ## Tutorial
 
