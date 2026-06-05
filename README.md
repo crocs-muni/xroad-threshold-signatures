@@ -187,3 +187,14 @@ Make sure the `xroad` user is in the `tss` group and owns the `/dev/` path.
 
 ### Note about TPM2 token
 For using TPM2 the `tpm2_ptool` can come in handy. There might be other issues, for example, during the test setup, the [`pkcs11-logger`](https://github.com/pkcs11interop/pkcs11-logger) was utilized as a man-in-the-middle to only pass 32 bytes in order to the complete integration work.
+
+## Related projects
+
+### [Pretzel](github.com/crocs-muni/JCFROST/)
+The Pretzel libraryt that implements RSA-threshold cryptographic signatures, and supports the distributed signing based on the [Practical Threshold Signatures](https://doi.org/10.1007/3-540-45539-6_15) by V. Shoup. This library was implemented to be used in the X-Road demo showcased above.
+
+### [JCFROST](github.com/crocs-muni/JCFROST/)
+A JavaCard implementation of the FROST threshold signature scheme using public JavaCard API.
+
+### [JCMathLib](https://github.com/OpenCryptoProject/JCMathLib/)
+An open-source library for the JavaCard platform that aims to enable low-level cryptographic computations unavailable in the standard JavaCard API, such as JCFROST.
