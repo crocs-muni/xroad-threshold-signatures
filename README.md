@@ -162,3 +162,24 @@ At this point it should be possible to use the threshold signing key to sign a C
 $ curl -H 'X-Road-Client: {X-Road instance identifier}/{Client Member class}/{Client Member code}/{Client Member Subsystem code}' \
     -X GET -i "https://{Clients' Security Server IP or domain}/r1/{X-Road instance identifier}/{Provider Member class}/{Provider Member code}/{Provider Member Subsystem code}/{Provider Member Subsystem Service name}/{REST API endpoint}" -k
 ```
+
+## Enable EC Based Certificates
+[X-Road documentation](https://docs.x-road.global/Manuals/ug-ss_x-road_6_security_server_user_guide.html#251-steps-to-enable-ec-based-certificates`)
+
+
+How to add `xroad-addon-hwtokens` package to `release-7.7` images:
+```shell
+apt install lsb-release
+
+rm -rf /var/lib/apt/lists/*
+apt clean
+curl -fsSL https://x-road.eu/gpg/key/public/niis-artifactory-public.gpg | sudo tee /usr/share/keyrings/niis-artifactory-keyring.gpg > /dev/null
+echo "deb [signed-by=/usr/share/keyrings/niis-artifactory-keyring.gpg] https://artifactory.niis.org/xroad-release-deb $(lsb_release -sc)-current main" | sudo tee /etc/apt/sources.list.d/xroad.list > /dev/null
+apt update
+apt install xroad-addon-hwtokens
+
+Make sure the `xroad` user is in the `tss` group and owns the `/dev/` path.
+```
+
+### Note about TPM2 token
+For using TPM2 the `tpm2_ptool` can come in handy. There might be other issues, for example, during the test setup, the [`pkcs11-logger`](https://github.com/pkcs11interop/pkcs11-logger) was utilized as a man-in-the-middle to only pass 32 bytes in order to the complete integration work.
