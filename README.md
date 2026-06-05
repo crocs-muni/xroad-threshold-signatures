@@ -146,6 +146,10 @@ COMMUNICATOR_CERTIFICATE_PATH=/home/xroad/meesign-ca-cert.pem
 GROUP_ID=3082010a02820101008c006cbc05c14437df26328447d3ac992c1923d936f4be30bfa5520395ce78555404cac30ddb63bf7aeb0006e345827a72e61d6a0075f413ae77ca07b75400e8d20c7140cf2efbe53fa981a39d46f3c230f68c71a9b05024f06d9b7b1fbb1730870bdc4dfc1ebf4856161e3335d5070adc09d483a32c61918b4068a14f11fedaa3640ff33d7e91cca307c690508fd35a8929db723a84f4d112675c5935dc1ae546d19b56bc4ec9e6c81146a5a766af539dc4745bf1a554d93bb60c43434a63189875fb5647f0ffcd758ee8e227febc7c9a3038267a96aa1ba48a89934f058de1f1b9c730e3a48c33c91cfc1f19f8fbadbbf7124ddf338ff6fcadd5d9458c8e110203010001
 ```
 
+Cryptoki Bridge `home` folder `/home/xroad`. By default set to the current user home directory, but that one does not exist in the Docker deployed images.
+
+In order for the TLS connection to be established between the MeeSign server and the PKCS#11 Bridge, the `COMMUNICATOR_HOSTNAME` has to match the one in the MeeSign server [certificate](https://github.com/crocs-muni/meesign-server/blob/main/generate_keys.sh#L6), by default set to `meesign.local`. Instead of generating new certificate, you can also set the `COMMUNICATOR_HOSTNAME=meesign.local` and point alias the IP/domain, e.g., in `/etc/hosts`, for example, add a line with `10.174.114.1 meesign.local` there.
+
 Before you can use the group for signing you need to restart the `xroad-signer` service with:
 ```shell
 root@demoss1:~# systemctl restart xroad-signer.service
